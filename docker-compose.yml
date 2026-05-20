@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  # Definimos el servicio basado en tu Dockerfile de Ubuntu
+  servidor-ubuntu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Le digo a Docker que levante 20 réplicas (contenedores) de este servicio
+    deploy:
+      replicas: 20
+    # Rango de 20 puertos del anfitrión (8001-8020) al puerto 80 de los contenedores
+    ports:
+      - "8001-8020:80"
