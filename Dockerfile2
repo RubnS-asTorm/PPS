@@ -1,0 +1,27 @@
+# Partimos de una imagen oficial de Ubuntu
+FROM ubuntu:22.04
+
+# Evitar bloqueos interactivos durante la instalación
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 1 y 2. Actualizar repositorios e instalar Apache, PHP y Git
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    php \
+    libapache2-mod-php \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Limpiar el index.html de bienvenida que Apache trae por defecto
+RUN rm -f /var/www/html/index.html
+
+# 3. Descargar automáticamente una aplicación web PHP/HTML5 sencilla ya terminada desde GitHub
+RUN git clone https://github.com/gabrielecirulli/2048.git /tmp/repo && \
+    cp -r /tmp/repo/* /var/www/html/ && \
+    rm -rf /tmp/repo
+
+# Indicar que el contenedor expone el puerto 80
+EXPOSE 80
+
+# Arrancar Apache en primer plano para mantener el contenedor activo
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
